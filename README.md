@@ -1,7 +1,6 @@
 # 🌍 GlobalTale — Track Your Travels with Ease
 
-GlobalTale is a modern travel tracking web application built with **React**. It lets you mark places you've visited on an interactive map, take notes, and keep a personal travel journal. This project is inspired by Jonas Schmedtmann's course *"React – The Complete Guide"*.
-
+GlobalTale is a modern travel tracking web application built with **React**. It lets you mark places you've visited on an interactive map, take notes, and keep a personal travel journal. 
 ## 🚀 Live Demo
 
 [🔗 View Live Project](https://globetale.netlify.app/) 
