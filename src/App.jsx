@@ -11,12 +11,6 @@ import City from "./components/City";
 import Form from "./components/Form";
 import SpinnerFullPage from "./components/SpinnerFullPage";
 
-// import Product from "./pages/Product";
-// import Pricing from "./pages/Pricing";
-// import Homepage from "./pages/Homepage";
-// import Login from "./pages/Login";
-// import AppLayout from "./pages/AppLayout";
-// import PageNotFound from "./pages/PageNotFound";
 
 const Homepage = lazy(() => import("./pages/Homepage"));
 const Product = lazy(() => import("./pages/Product"));
@@ -31,7 +25,7 @@ const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 function App() {
   return (
     <AuthProvider>
-      <CitiesProvider>
+  
         <BrowserRouter>
           <Suspense fallback={<SpinnerFullPage />}>
             <Routes>
@@ -43,7 +37,10 @@ function App() {
                 path="app"
                 element={
                   <ProtectedRoute>
+                    <CitiesProvider>
+
                     <AppLayout />
+                    </CitiesProvider>
                   </ProtectedRoute>
                 }
               >
@@ -57,7 +54,7 @@ function App() {
             </Routes>
           </Suspense>
         </BrowserRouter>
-      </CitiesProvider>
+ 
     </AuthProvider>
   );
 }

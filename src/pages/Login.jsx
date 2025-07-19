@@ -7,16 +7,22 @@ import styles from "./Login.module.css";
 
 export default function Login() {
   // PRE-FILL FOR DEV PURPOSES
-  const [email, setEmail] = useState("vaibhav@gmail.com");
-  const [password, setPassword] = useState("qwerty");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName]=useState("")
+  const [authMode, setAuthMode] = useState("login");
 
-  const { login, isAuthenticated } = useAuth();
+  const { handleSignUp,handleLogin, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    if (email && password) login(email, password);
+    if (authMode === "signup") {
+      if (email && password && name) handleSignUp(name,email, password);
+    }
+    else {
+      handleLogin(password, email);
+    }
   }
 
   useEffect(
@@ -31,6 +37,19 @@ export default function Login() {
       <PageNav />
 
       <form className={styles.form} onSubmit={handleSubmit}>
+        {authMode === "signup" && (
+          <div className={styles.row}>
+            <label htmlFor="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              placeholder="Vaibhav Raj"
+            />
+          </div>
+        )}
+
         <div className={styles.row}>
           <label htmlFor="email">Email address</label>
           <input
@@ -38,6 +57,7 @@ export default function Login() {
             id="email"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            placeholder="vaibhav@gmail.com"
           />
         </div>
 
@@ -51,8 +71,22 @@ export default function Login() {
           />
         </div>
 
-        <div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <Button type="primary">Login</Button>
+          <p
+            onClick={() =>
+              setAuthMode((curr) => (curr === "signup" ? "login" : "signup"))
+            }
+            className={styles.hover}
+          >
+            {authMode === "signup" ? "Click to Login" : "Sign Up here"}
+          </p>
         </div>
       </form>
     </main>

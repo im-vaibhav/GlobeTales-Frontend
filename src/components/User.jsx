@@ -13,7 +13,7 @@ function User() {
 
   return (
     <div className={styles.user}>
-      <img src={user.avatar} alt={user.name} />
+      <img src={"https://avatars.githubusercontent.com/u/583231?v=4"} alt={user.name} />
       <span>Welcome, {user.name}</span>
       <button onClick={handleClick}>Logout</button>
     </div>

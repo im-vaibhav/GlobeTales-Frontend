@@ -5,10 +5,11 @@ import {
   useReducer,
   useCallback,
 } from "react";
+import axios from "axios";
+import { useAuth } from "./FakeAuthContext";
 
-
-// const BASE_URL = "http://127.0.0.1:9000";
-const BASE_URL = "https://globetales-backend-2yjp.onrender.com";
+const BASE_URL = "http://127.0.0.1:9000/api";
+// const BASE_URL = "https://globetales-backend-2yjp.onrender.com";
 
 const CitiesContext = createContext();
 
@@ -17,6 +18,7 @@ const initialState = {
   isLoading: false,
   currentCity: {},
   error: "",
+  // token:localStorage.getItem("token")?localStorage.getItem("token"):""
 };
 
 function reducer(state, action) {
@@ -35,6 +37,7 @@ function reducer(state, action) {
       return { ...state, isLoading: false, currentCity: action.payload };
 
     case "city/created":
+      console.log(state.cities)
       return {
         ...state,
         isLoading: false,
@@ -67,24 +70,33 @@ function CitiesProvider({ children }) {
     reducer,
     initialState
   );
-
-  useEffect(function () {
-    async function fetchCities() {
-      dispatch({ type: "loading" });
-
-      try {
-        const res = await fetch(`${BASE_URL}/cities`);
-        const { data } = await res.json();
-        dispatch({ type: "cities/loaded", payload: data });
-      } catch {
-        dispatch({
-          type: "rejected",
-          payload: "There was an error loading cities...",
-        });
+  const { isAuthenticated } = useAuth();
+  useEffect(
+    function () {
+      async function fetchCities() {
+        dispatch({ type: "loading" });
+        try {
+          const res = await axios.get(`${BASE_URL}/city`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          console.log(res.data.data.formattedCities);
+          dispatch({
+            type: "cities/loaded",
+            payload: res.data.data.formattedCities,
+          });
+        } catch {
+          dispatch({
+            type: "rejected",
+            payload: "There was an error loading cities...",
+          });
+        }
       }
-    }
-    fetchCities();
-  }, []);
+      fetchCities();
+    },
+    [isAuthenticated]
+  );
 
   const getCity = useCallback(
     async function getCity(id) {
@@ -93,9 +105,12 @@ function CitiesProvider({ children }) {
       dispatch({ type: "loading" });
 
       try {
-        const res = await fetch(`${BASE_URL}/cities/${id}`);
-        const { data } = await res.json();
-        dispatch({ type: "city/loaded", payload: data });
+        const res = await axios.get(`${BASE_URL}/city/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        dispatch({ type: "city/loaded", payload: res.data.data });
       } catch {
         dispatch({
           type: "rejected",
@@ -110,16 +125,12 @@ function CitiesProvider({ children }) {
     dispatch({ type: "loading" });
 
     try {
-      const res = await fetch(`${BASE_URL}/cities`, {
-        method: "POST",
-        body: JSON.stringify(newCity),
+      const res = await axios.post(`${BASE_URL}/city`, newCity,{
         headers: {
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      const { data } = await res.json();
-
-      dispatch({ type: "city/created", payload: data });
+      dispatch({ type: "city/created", payload: res.data.data });
     } catch {
       dispatch({
         type: "rejected",
@@ -132,10 +143,11 @@ function CitiesProvider({ children }) {
     dispatch({ type: "loading" });
 
     try {
-      await fetch(`${BASE_URL}/cities/${id}`, {
-        method: "DELETE",
+      await axios.delete(`${BASE_URL}/city/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-
       dispatch({ type: "city/deleted", payload: id });
     } catch {
       dispatch({
