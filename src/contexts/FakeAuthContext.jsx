@@ -2,7 +2,7 @@ import { createContext, useContext, useReducer } from "react";
 import axios from "axios";
 
 const AuthContext = createContext();
-const BACKEND_URL="http://127.0.0.1:9000/api"
+const BACKEND_URL = "https://globetales-backend-2yjp.onrender.com";
 const initialState = {
   user: null,
   isAuthenticated: false,

@@ -8,8 +8,8 @@ import {
 import axios from "axios";
 import { useAuth } from "./FakeAuthContext";
 
-const BASE_URL = "http://127.0.0.1:9000/api";
-// const BASE_URL = "https://globetales-backend-2yjp.onrender.com";
+// const BASE_URL = "http://127.0.0.1:9000/api";
+const BASE_URL = "https://globetales-backend-2yjp.onrender.com";
 
 const CitiesContext = createContext();
 
